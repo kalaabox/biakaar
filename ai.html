@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>BioAkaar  Assistant</title>
+  <link rel="stylesheet" href="css/ai.css">
+</head>
+<body>
+
+
+
+<header>
+  <div class="logo">🌿 BioAkaar</div>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="games.html">Games</a></li>
+      <li><a href="team.html">Team</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="notes.html">Notes</a></li>
+      <li><a href="community.html">Review</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="ai.html">Search</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+<section class="ai-container">
+  <h1>BioAkaar  Assistant 🔍</h1>
+  <p class="tagline">Your smart search guide for bioinformatics, genes, and biology concepts.</p>
+  <p class="tagline">With the help of google</p>
+
+  <!-- Google Custom Search -->
+  <div class="search-box">
+    <script async src="https://cse.google.com/cse.js?cx=a683f651ac51e432a"></script>
+    <div class="gcse-search"></div>
+  </div>
+
+  <div class="suggestions">
+    <h2>Quick Suggestions 📚</h2>
+    <div class="suggestion-cards">
+      <div class="card">
+        <h3>What is DNA?</h3>
+        <p>DNA is the genetic material carrying information about an organism.</p>
+      </div>
+      <div class="card">
+        <h3>Bioinformatics Careers?</h3>
+        <p>Explore jobs like data analyst, genomics researcher, and AI bioengineer.</p>
+      </div>
+      <div class="card">
+        <h3>Top Genetic Disorders</h3>
+        <p>Learn about disorders like Cystic Fibrosis, Sickle Cell Anemia, and more.</p>
+      </div>
+       <div class="card">
+    <h3>NGS Data Analysis</h3>
+    <p>Use bioinformatics pipelines to analyze large-scale Next Generation Sequencing (NGS) datasets efficiently.</p>
+  </div>
+
+  <div class="card">
+    <h3>Genome Annotation</h3>
+    <p>Process of identifying gene locations, coding regions and their biological functions in sequenced genomes.</p>
+  </div>
+
+  <div class="card">
+    <h3>Metagenomics Platforms</h3>
+    <p>Tools like QIIME2 and MG-RAST for analyzing microbial community data from environmental samples.</p>
+  </div>
+
+  <div class="card">
+    <h3>Protein-Protein Interaction Networks</h3>
+    <p>Study of biological networks showing how proteins interact within a cell, crucial for drug discovery.</p>
+  </div>
+
+  <div class="card">
+    <h3>Drug Discovery Bioinformatics</h3>
+    <p>AI-driven bioinformatics for virtual screening, molecular docking, and drug candidate optimization.</p>
+  </div>
+
+  <div class="card">
+    <h3>CADD (Computer-Aided Drug Design)</h3>
+    <p>Use of computational tools to predict drug-receptor interactions, reducing lab costs and time.</p>
+  </div>
+
+  <div class="card">
+    <h3>Transcriptomics Analysis</h3>
+    <p>Bioinformatics workflows for analyzing gene expression data from RNA-Seq experiments.</p>
+  </div>
+
+  <div class="card">
+    <h3>Single Cell Sequencing</h3>
+    <p>Bioinformatics methods for analyzing gene expression at single-cell resolution for precision medicine.</p>
+  </div>
+
+  <div class="card">
+    <h3>Comparative Genomics</h3>
+    <p>Comparing genome sequences of different organisms to understand evolution, function and disease.</p>
+  </div>
+    </div>
+  </div>
+
+</section>
+<script>
+// Disable Right Click
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// Disable F12, Ctrl+Shift+I, Ctrl+U, Ctrl+Shift+J
+document.onkeydown = function(e) {
+    if(e.keyCode == 123) { // F12
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+       return false;
+    }
+};
+
+// Disable Mouse Middle Click
+document.addEventListener("mousedown", function(e){
+  if(e.button == 1){
+    e.preventDefault();
+    return false;
+  }
+}, true);
+
+// Disable Dragging
+document.addEventListener('dragstart', event => event.preventDefault());
+</script>
+
+<footer>© 2025 BioAkaar Team</footer>
+
+
+</body>
+</html>

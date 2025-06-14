@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register | MyLibrary</title>
+  <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+
+<header>
+  <div class="logo">🌿 BioAkaar</div>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="games.html">Games</a></li>
+      <li><a href="team.html">Team</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="notes.html">Notes</a></li>
+      <li><a href="community.html">Review</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="ai.html">Search</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div class="auth-container">
+  <div class="auth-card">
+    <h2>Create Your Account</h2>
+    <form id="registerForm">
+      <input type="text" id="fullname" placeholder="Full Name" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit" class="btn">Register</button>
+    </form>
+    <p>Already have an account? <a href="login.html">Login here</a></p>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB111y481rAdUE-aAkFM9lAH8H7SycaH4I",
+    authDomain: "mylib-bce9e.firebaseapp.com",
+    projectId: "mylib-bce9e",
+    storageBucket: "mylib-bce9e.appspot.com",
+    messagingSenderId: "1091502164273",
+    appId: "1:1091502164273:web:036187e8a2e43a83a90810"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  document.getElementById('registerForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        alert("Registration Successful! Please login.");
+        window.location.href = "login.html";
+      })
+      .catch((error) => {
+        alert("Registration Failed: " + error.message);
+      });
+  });
+
+  
+// Disable Right Click
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// Disable F12, Ctrl+Shift+I, Ctrl+U, Ctrl+Shift+J
+document.onkeydown = function(e) {
+    if(e.keyCode == 123) { // F12
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+       return false;
+    }
+};
+
+// Disable Mouse Middle Click
+document.addEventListener("mousedown", function(e){
+  if(e.button == 1){
+    e.preventDefault();
+    return false;
+  }
+}, true);
+
+// Disable Dragging
+document.addEventListener('dragstart', event => event.preventDefault());
+
+
+</script>
+
+<footer>
+  © 2025 BioAkaar Team
+</footer>
+
+</body>
+</html>

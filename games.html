@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Games | BioAkaar</title>
+  <link rel="stylesheet" href="css/game.css">
+</head>
+<body>
+
+
+
+<header>
+  <div class="logo">🌿 BioAkaar</div>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="games.html">Games</a></li>
+      <li><a href="team.html">Team</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="notes.html">Notes</a></li>
+      <li><a href="community.html">Review</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="ai.html">Search</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>BioAkaar Games 🎮</h1>
+  <p>Interactive biology-inspired games for learning and fun!</p>
+
+  <div class="game-cards">
+    <div class="card">
+      <h3>Mutation Analysis</h3>
+      <p>Find mutations in DNA sequences.</p>
+      <a href="mutation-game.html" class="btn">Play Now</a>
+    </div>
+
+    <div class="card">
+      <h3>DNA Runner</h3>
+      <p>Jump over genetic obstacles and collect genes.</p>
+      <a href="runner-game.html" class="btn">Play Now</a>
+    </div>
+
+    <div class="card">
+      <h3>BIO and IT  Quiz</h3>
+      <p>Increse your knowldege</p>
+      <a href="cell-quiz-game.html" class="btn">Play Now</a>
+    </div>
+
+    <div class="card">
+      <h3>Card Flip</h3>
+      <p>Memory Test</p>
+      <a href="flipgame.html" class="btn">Play Now</a>
+    </div>
+
+     <div class="card">
+      <h3>Typing Speed</h3>
+      <p>Bio Typing Race</p>
+      <a href="carrace.html" class="btn">Play Now</a>
+    </div>
+    
+    <div class="card">
+      <h3>DNA Repair</h3>
+      <p>Quiz</p>
+      <a href="repair.html" class="btn">Play Now</a>
+    </div>
+
+     <div class="card">
+      <h3>Coming Soon</h3>
+      <p>Progress in work</p>
+      <a href="come.html" class="btn">Play Now</a>
+    </div>
+
+     <div class="card">
+      <h3>Coming Soon</h3>
+      <p>Progress in work</p>
+      <a href="come.html" class="btn">Play Now</a>
+    </div>
+
+     <div class="card">
+      <h3>Coming Soon</h3>
+      <p>Progress in work</p>
+      <a href="come.html" class="btn">Play Now</a>
+    </div>
+
+     <div class="card">
+      <h3>Coming Soon</h3>
+      <p>Progress in work</p>
+      <a href="come.html" class="btn">Play Now</a>
+    </div>
+</section>
+<script>
+// Disable Right Click
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// Disable F12, Ctrl+Shift+I, Ctrl+U, Ctrl+Shift+J
+document.onkeydown = function(e) {
+    if(e.keyCode == 123) { // F12
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+       return false;
+    }
+};
+
+// Disable Mouse Middle Click
+document.addEventListener("mousedown", function(e){
+  if(e.button == 1){
+    e.preventDefault();
+    return false;
+  }
+}, true);
+
+// Disable Dragging
+document.addEventListener('dragstart', event => event.preventDefault());
+</script>
+
+<footer>
+  © 2025 BioAkaar Team
+</footer>
+
+
+</body>
+</html>

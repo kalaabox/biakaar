@@ -1,0 +1,150 @@
+/* css/game-style.css */
+
+body {
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  background: linear-gradient(135deg, #e8f5e9, #e0f7fa);
+  color: #333;
+  padding: 40px;
+  margin: 0;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: #2e7d32;
+  text-shadow: 1px 1px 2px #a5d6a7;
+}
+
+button {
+  padding: 14px 30px;
+  margin: 10px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 25px;
+  background: #66bb6a;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background: #43a047;
+  transform: scale(1.05);
+}
+
+input[type="text"] {
+  padding: 12px;
+  border: 2px solid #a5d6a7;
+  border-radius: 20px;
+  font-size: 1rem;
+  outline: none;
+  margin: 10px;
+}
+
+input[type="text"]:focus {
+  border-color: #66bb6a;
+}
+
+p {
+  font-size: 1.1rem;
+  margin: 15px;
+}
+
+#result {
+  font-weight: bold;
+  font-size: 1.3rem;
+  margin-top: 20px;
+}
+
+.loader {
+  border: 8px solid #c8e6c9;
+  border-top: 8px solid #66bb6a;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-top: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@import url('responsive.css');
+/* 📱 Universal Mobile Responsive CSS — BioAkaar */
+
+/* Navbar responsive */
+@media (max-width: 768px) {
+  nav ul {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 0;
+  }
+
+  nav ul li {
+    display: block;
+    margin: 5px 0;
+  }
+
+  nav {
+    padding: 10px;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+  }
+
+  h1, h2 {
+    font-size: 1.8rem;
+    text-align: center;
+  }
+
+  p {
+    font-size: 0.95rem;
+    text-align: center;
+  }
+
+  .hero {
+    padding: 20px;
+  }
+
+  /* For any grid layout like project, notes, team, games etc */
+  .project-grid, .notes-grid, .team-cards, .game-cards, .leaderboard-cards, .chat-messages {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 15px;
+  }
+
+  .card, .project-card, .note-card, .game-card, .leaderboard-card, .chat-card {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+  }
+
+  /* Sidebar responsive */
+  .sidebar {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .notes-container {
+    flex-direction: column;
+  }
+
+  /* AI search box adjust */
+  .gcse-search {
+    margin: 20px auto;
+    width: 95%;
+  }
+
+  /* Footer center */
+  footer {
+    text-align: center;
+    padding: 15px 5px;
+    font-size: 0.9rem;
+  }
+}
+

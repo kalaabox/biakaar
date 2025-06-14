@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+  import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD_VtMcL42y4GEJRNtL9nSpwNjL35zFh9A",
+    authDomain: "score-1307f.firebaseapp.com",
+    databaseURL: "https://score-1307f-default-rtdb.firebaseio.com",
+    projectId: "score-1307f",
+    storageBucket: "score-1307f.appspot.com",
+    messagingSenderId: "796173214179",
+    appId: "1:796173214179:web:42e6b31563932e869b00d6"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+  window.database = database;
+  window.ref = ref;
+  window.push = push;
+  window.onValue = onValue;
+
+
+
+  
+// Disable Right Click
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// Disable F12, Ctrl+Shift+I, Ctrl+U, Ctrl+Shift+J
+document.onkeydown = function(e) {
+    if(e.keyCode == 123) { // F12
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+       return false;
+    }
+};
+
+// Disable Mouse Middle Click
+document.addEventListener("mousedown", function(e){
+  if(e.button == 1){
+    e.preventDefault();
+    return false;
+  }
+}, true);
+
+// Disable Dragging
+document.addEventListener('dragstart', event => event.preventDefault());
+
+</script>
+
+<meta charset="UTF-8">
+<title>Mutation Identifier | BioAkaar</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+/* existing styles — untouched */
+body { font-family: 'Poppins', sans-serif; margin:0; padding:0; background: #f5f5f5; }
+header { background: #00796b; color: #fff; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+header .logo { font-size: 22px; font-weight: bold; }
+header nav ul { list-style: none; display: flex; margin:0; padding:0; }
+header nav ul li { margin-left: 20px; }
+header nav ul li a { color: #fff; text-decoration: none; font-size: 15px; }
+.game-container { padding: 30px; max-width: 900px; margin: auto; text-align: center; }
+.dna { font-size: 1.5rem; word-wrap: break-word; margin: 20px 0; color: #333; }
+input, button { padding: 10px 20px; margin: 10px; font-size: 1rem; }
+button { cursor: pointer; border: none; background: #00796b; color: #fff; border-radius: 5px; }
+.badge, #timer { margin-top: 20px; font-size: 1.2rem; color: #00695c; font-weight: bold; }
+.restart-btn, #startBtn { padding: 12px 20px; font-size: 1rem; background: #d32f2f; color: #fff; border: none; border-radius: 6px; margin-top: 15px; cursor: pointer; }
+.info-section { background: #e0f2f1; padding: 15px; border-left: 5px solid #00796b; margin: 20px 0; text-align: left; border-radius: 5px; }
+.info-section h3 { margin-top: 0; color: #004d40; }
+footer { background: #00796b; color: #fff; padding: 12px 0; text-align: center; margin-top: 50px; }
+.game-elements { display: none; }
+#leaderboard { margin-top: 20px; text-align: left; padding: 10px; background: #e0f7fa; border-radius: 5px; display:none; }
+</style>
+</head>
+
+<body>
+<header>
+<div class="logo">🌿 BioAkaar</div>
+<nav>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="games.html">Games</a></li>
+  </ul>
+</nav>
+</header>
+
+<section class="game-container">
+<h1>🧬 Mutation Identifier</h1>
+<div class="info-section">
+  <h3>What is a Mutation?</h3>
+  <p>A mutation is a change in the DNA sequence caused by environmental factors or copying errors. Your task: spot the wrong base in each DNA sequence before time runs out!</p>
+</div>
+
+<button id="startBtn" onclick="startGame()">▶️ Start Game</button>
+
+<div class="game-elements">
+  <h3>Find the wrong base in this DNA sequence:</h3>
+  <div id="dnaSeq" class="dna"></div>
+
+  <input type="text" id="userInput" placeholder="Wrong base">
+  <button onclick="checkMutation()">Check</button>
+
+  <p id="result"></p>
+  <p id="score">Score: 0 | Level: 1</p>
+  <div id="badge" class="badge"></div>
+  <div id="timer"></div>
+  <button id="restartBtn" class="restart-btn" style="display:none;" onclick="startGame()">Restart</button>
+</div>
+
+<div id="leaderboard"></div>
+</section>
+
+
+
+<script>
+let score=0, level=1, timeLeft=20, timer, gameActive=false;
+const dnaEl=document.getElementById("dnaSeq");
+const resultEl=document.getElementById("result");
+const scoreEl=document.getElementById("score");
+const badgeEl=document.getElementById("badge");
+const timerEl=document.getElementById("timer");
+const restartBtn=document.getElementById("restartBtn");
+const startBtn=document.getElementById("startBtn");
+const gameElements=document.querySelector(".game-elements");
+const userInput=document.getElementById("userInput");
+let current={};
+
+function generateDNA(){
+  const bases=['A','T','C','G'];
+  let length=20+(level-1)*5,seq='';
+  for(let i=0;i<length;i++) seq+=bases[Math.floor(Math.random()*4)];
+  let mutationBases=['Z','X','Q','M'];
+  if(level>=3) mutationBases=['P','Y','K','V'];
+  let pos=Math.floor(Math.random()*length);
+  let wrongBase=mutationBases[Math.floor(Math.random()*mutationBases.length)];
+  seq=seq.substring(0,pos)+wrongBase+seq.substring(pos+1);
+  return { seq, wrongBase };
+}
+
+function startGame(){
+  score=0; level=1; timeLeft=20; gameActive=true;
+  restartBtn.style.display="none";
+  badgeEl.innerText=""; resultEl.innerText="";
+  userInput.disabled=false; userInput.value="";
+  startBtn.style.display="none";
+  gameElements.style.display="block";
+  document.getElementById("leaderboard").style.display="none";
+  updateTimer();
+  current=generateDNA();
+  dnaEl.innerText=current.seq;
+  scoreEl.innerText=`Score: ${score} | Level: ${level}`;
+  startTimer();
+}
+
+function checkMutation(){
+  if(!gameActive) return;
+  let input=userInput.value.toUpperCase();
+  if(input===current.wrongBase){
+    score++;
+    if(score<50) timeLeft++;
+    else timeLeft+=3;
+    if(score===20) level=2;
+    if(score===50) level=3;
+    if(score===70) level=4;
+    if(score===100) level=5;
+    updateBadge();
+    current=generateDNA();
+    dnaEl.innerText=current.seq;
+    userInput.value="";
+    scoreEl.innerText=`Score: ${score} | Level: ${level}`;
+    resultEl.innerText="✅ Correct!";
+  }else{
+    resultEl.innerText="❌ Incorrect!";
+    gameOver();
+  }
+}
+
+function startTimer(){
+  clearInterval(timer);
+  timer=setInterval(()=>{
+    timeLeft--;
+    updateTimer();
+    if(timeLeft<=0){
+      clearInterval(timer);
+      gameOver();
+    }
+  },1000);
+}
+
+function updateTimer(){ timerEl.innerText=`Time Left: ${timeLeft} sec`; }
+function updateBadge(){
+  let badge="";
+  if(level===1) badge="🥉 Bronze";
+  if(level===2) badge="🥈 Silver";
+  if(level===3) badge="🥇 Gold";
+  if(level===4) badge="💎 Diamond";
+  if(level===5) badge="🏆 Platinum";
+  badgeEl.innerText=badge;
+}
+
+function gameOver(){
+  resultEl.innerText="⏳ Time's up!";
+  restartBtn.style.display="inline-block";
+  dnaEl.innerText=""; timerEl.innerText="";
+  gameActive=false; userInput.disabled=true;
+  let playerName=prompt("Game Over! Enter your name to save your score:");
+  if(playerName){
+    const scoresRef=window.ref(window.database,"mutation_scores");
+    window.push(scoresRef,{ name:playerName,score:score });
+  }
+  loadLeaderboard();
+}
+
+function loadLeaderboard(){
+  const lbEl=document.getElementById("leaderboard");
+  lbEl.innerHTML="<h3>🏆 Leaderboard:</h3><ul>";
+  const scoresRef=window.ref(window.database,"mutation_scores");
+  window.onValue(scoresRef,snap=>{
+    let data=snap.val();
+    let arr=[];
+    for(let key in data) arr.push(data[key]);
+    arr.sort((a,b)=>b.score-a.score);
+    arr.slice(0,5).forEach(s=>lbEl.innerHTML+=`<li>${s.name}: ${s.score}</li>`);
+    lbEl.innerHTML+="</ul>";
+    lbEl.style.display="block";
+  });
+}
+
+// Enter key triggers checkMutation
+userInput.addEventListener("keydown", e=>{
+  if(e.key==="Enter") checkMutation();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BioAkaar | Community</title>
+  <link rel="stylesheet" href="css/home.css">
+  <style>
+    .review-input {
+      padding: 10px;
+      border: 2px solid #4CAF50;
+      border-radius: 8px;
+      width: 80%;
+      margin: 8px 0;
+    }
+    .submit-btn {
+      padding: 10px 25px;
+      background: linear-gradient(to right, #4CAF50, #2E7D32);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .submit-btn:hover {
+      background: linear-gradient(to right, #66BB6A, #43A047);
+    }
+    .testimonial {
+      background: rgba(255, 255, 255, 0.85);
+      margin: 15px auto;
+      padding: 15px;
+      border-left: 5px solid #4CAF50;
+      border-radius: 6px;
+      max-width: 800px;
+      font-style: italic;
+    }
+    .testimonial h3 {
+      margin: 0 0 5px;
+      color: #2E7D32;
+    }
+    .collage {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 20px;
+    }
+    .collage div {
+      background-size: cover;
+      background-position: center;
+      height: 160px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    
+  </style>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD_VtMcL42y4GEJRNtL9nSpwNjL35zFh9A",
+      authDomain: "score-1307f.firebaseapp.com",
+      databaseURL: "https://score-1307f-default-rtdb.firebaseio.com",
+      projectId: "score-1307f",
+      storageBucket: "score-1307f.appspot.com",
+      messagingSenderId: "796173214179",
+      appId: "1:796173214179:web:42e6b31563932e869b00d6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    window.database = database;
+    window.ref = ref;
+    window.push = push;
+    window.onValue = onValue;
+
+    // Disable Right Click
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// Disable Dragging of Images and Other Elements
+document.addEventListener('dragstart', event => event.preventDefault());
+
+// Disable F12, Ctrl+Shift+I/J/C, Ctrl+U
+document.onkeydown = function(e) {
+  if (e.keyCode == 123) return false; // F12
+  if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) return false;
+  if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+  if (e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)) return false; // Ctrl+S
+};
+
+// Disable Text Selection
+document.addEventListener('selectstart', event => event.preventDefault());
+
+// Disable Mouse Middle Click (wheel button)
+document.addEventListener("mousedown", function(e){
+  if(e.button == 1){
+    e.preventDefault();
+    return false;
+  }
+}, true);
+
+// Disable Image Copy via Drag or Save Image As
+document.querySelectorAll('img').forEach(img => {
+  img.setAttribute('draggable', 'false');
+  img.setAttribute('oncontextmenu', 'return false');
+});
+
+// Disable Screenshot via PrintScreen (limited)
+document.addEventListener("keyup", function(e){
+  if(e.key == "PrintScreen"){
+    alert("Screenshots are disabled on this page.");
+    navigator.clipboard.writeText("Screenshots disabled.");
+  }
+});
+
+// Disable Copy Shortcut
+document.addEventListener("copy", function(e){
+  e.preventDefault();
+  alert("Copying is disabled on this page.");
+  return false;
+});
+
+// Basic Page Access Check (if you wish — optional)
+if(!localStorage.getItem("loggedIn")){
+  console.warn("Unauthorised access — please login first.");
+  // window.location.href = "login.html";  // Uncomment if you want to force login protection too
+}
+
+
+// Disable Right Click
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// Disable F12, Ctrl+Shift+I, Ctrl+U, Ctrl+Shift+J
+document.onkeydown = function(e) {
+    if(e.keyCode == 123) { // F12
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+       return false;
+    }
+};
+
+// Disable Mouse Middle Click
+document.addEventListener("mousedown", function(e){
+  if(e.button == 1){
+    e.preventDefault();
+    return false;
+  }
+}, true);
+
+// Disable Dragging
+document.addEventListener('dragstart', event => event.preventDefault());
+
+  </script>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">🌿 BioAkaar</div>
+  <nav>
+    <ul>
+     <li><a href="index.html">Home</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="games.html">Games</a></li>
+      <li><a href="team.html">Team</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="notes.html">Notes</a></li>
+      <li><a href="community.html">Review</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="ai.html">Search</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>BioAkaar Review Hub</h1>
+  <p>Check out what our users and team members think about BioAkaar!</p>
+</section>
+
+<section class="hero">
+  <h2>Share Your Review</h2>
+  <input type="text" id="name" placeholder="Your Name" class="review-input">
+  <textarea id="review" placeholder="Write your feedback..." rows="3" class="review-input"></textarea><br>
+  <button onclick="submitReview()" class="submit-btn">Submit Review</button>
+</section>
+
+<section id="reviewsSection">
+  <div class="testimonial"><h3>Dhiraj</h3><p>"Awesome platform for bioinformatics learners!"</p></div>
+  <div class="testimonial"><h3>Mahesh</h3><p>"Great notes and game sections."</p></div>
+  <div class="testimonial"><h3>Ritesh</h3><p>"Easy to use and very helpful for students."</p></div>
+  <div class="testimonial"><h3>Raj</h3><p>"Leaderboard and quiz games are superb!"</p></div>
+  <div class="testimonial"><h3>Nitu</h3><p>"Informative and engaging content."</p></div>
+  <div class="testimonial"><h3>Anjali</h3><p>"Loved the project ideas section!"</p></div>
+</section>
+
+<section class="hero">
+  <h2>Our College Memories 📸</h2>
+  <p>Special moments of our BioAkaar team, games & projects!</p>
+</section>
+
+<section class="collage">
+  <div style="background-image: url('images/all group.jpg');"></div>
+  <div style="background-image: url('images/chem.jpg');"></div>
+  <div style="background-image: url('images/group.jpg');"></div>
+  <div style="background-image: url('images/intern.jpg');"></div>
+  <div style="background-image: url('images/tubes .jpg');"></div>
+  <div style="background-image: url('images/block.jpg');"></div>
+   <div style="background-image: url('images/first .jpg');"></div>
+    <div style="background-image: url('images/counter .jpg');"></div>
+   <div style="background-image: url('images/demo.jpg');"></div>
+   
+   
+    
+   
+</section>
+
+<script>
+function submitReview(){
+  const name = document.getElementById('name').value;
+  const review = document.getElementById('review').value;
+  if(name && review){
+    const reviewRef = window.ref(window.database, "reviews");
+    window.push(reviewRef, {name, review});
+    alert("Review Submitted!");
+    location.reload();
+  }
+}
+
+firebase.database().ref("reviews").on("value", (snapshot)=>{
+  const data = snapshot.val();
+  if(data){
+    Object.entries(data).forEach(([key, r])=>{
+      const div = document.createElement('div');
+      div.className='testimonial';
+      div.innerHTML=`<h3>${r.name}</h3><p>"${r.review}"</p>`;
+      document.getElementById('reviewsSection').appendChild(div);
+    });
+  }
+});
+
+
+// Disable Right Click
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// Disable F12, Ctrl+Shift+I, Ctrl+U, Ctrl+Shift+J
+document.onkeydown = function(e) {
+    if(e.keyCode == 123) { // F12
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+       return false;
+    }
+};
+
+// Disable Mouse Middle Click
+document.addEventListener("mousedown", function(e){
+  if(e.button == 1){
+    e.preventDefault();
+    return false;
+  }
+}, true);
+
+// Disable Dragging
+document.addEventListener('dragstart', event => event.preventDefault());
+
+
+
+</script>
+
+<footer>© 2025 BioAkaar Team</footer>
+</body>
+</html>

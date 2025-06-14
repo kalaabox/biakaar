@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BioAkaar Memory Card Game</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD_VtMcL42y4GEJRNtL9nSpwNjL35zFh9A",
+      authDomain: "score-1307f.firebaseapp.com",
+      databaseURL: "https://score-1307f-default-rtdb.firebaseio.com",
+      projectId: "score-1307f",
+      storageBucket: "score-1307f.appspot.com",
+      messagingSenderId: "796173214179",
+      appId: "1:796173214179:web:42e6b31563932e869b00d6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    window.database = database;
+    window.ref = ref;
+    window.push = push;
+
+
+    
+// Disable Right Click
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// Disable F12, Ctrl+Shift+I, Ctrl+U, Ctrl+Shift+J
+document.onkeydown = function(e) {
+    if(e.keyCode == 123) { // F12
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+       return false;
+    }
+};
+
+// Disable Mouse Middle Click
+document.addEventListener("mousedown", function(e){
+  if(e.button == 1){
+    e.preventDefault();
+    return false;
+  }
+}, true);
+
+// Disable Dragging
+document.addEventListener('dragstart', event => event.preventDefault());
+
+  </script>
+
+  <style>
+    body { margin:0; font-family:sans-serif; background:#e0f7fa; text-align:center; }
+    h1 { margin-top:10px; }
+    #gameArea { display:flex; flex-wrap:wrap; width:320px; margin:20px auto; }
+    .card {
+      width:70px; height:70px; margin:5px; background:#4dd0e1; display:flex;
+      align-items:center; justify-content:center; font-size:32px; cursor:pointer;
+      border-radius:8px; color:white; user-select:none;
+    }
+    .flipped { background:#006064; }
+    #score, #timer { font-size:18px; margin:10px; }
+    #gameOverScreen { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); color:white; padding-top:80px; z-index:10; }
+    input, button { padding:8px; font-size:16px; margin:5px; }
+    #leaderboard { margin-top:10px; padding:10px; background:white; border-radius:8px; width:280px; margin:auto; }
+  </style>
+</head>
+<body>
+  <h1>BioAkaar Memory Card Game</h1>
+  <div id="score">Score: 0</div>
+  <div id="timer">Time: 60</div>
+  <div id="gameArea"></div>
+
+  <div id="gameOverScreen">
+    <h2>Game Over!</h2>
+    <p>Your Score: <span id="finalScore"></span></p>
+   
+    <button onclick="location.reload()">Play Again</button>
+   
+  </div>
+
+<script>
+let symbols = ['🧬','🦠','🧫','🧪','🦋','🌱','🧻','🧯'];
+let cards = symbols.concat(symbols);
+cards = cards.sort(()=>0.2-Math.random());
+let firstCard=null, secondCard=null, score=0, timeLeft=60;
+
+const gameArea = document.getElementById('gameArea');
+const timerText = document.getElementById('timer');
+
+cards.forEach((sym,i)=>{
+  let card = document.createElement('div');
+  card.className='card';
+  card.dataset.symbol=sym;
+  card.onclick=()=>flipCard(card);
+  gameArea.appendChild(card);
+});
+
+function flipCard(card){
+  if(card.classList.contains('flipped') || secondCard) return;
+  card.classList.add('flipped');
+  card.innerText=card.dataset.symbol;
+  if(!firstCard) firstCard=card;
+  else {
+    secondCard=card;
+    if(firstCard.dataset.symbol===secondCard.dataset.symbol){
+      score+=10;
+      document.getElementById('score').innerText='Score: '+score;
+      firstCard=null; secondCard=null;
+      if(document.querySelectorAll('.flipped').length===cards.length) endGame();
+    }else{
+      setTimeout(()=>{
+        firstCard.innerText='';
+        secondCard.innerText='';
+        firstCard.classList.remove('flipped');
+        secondCard.classList.remove('flipped');
+        firstCard=null; secondCard=null;
+      },500);
+    }
+  }
+}
+
+let timer = setInterval(()=>{
+  timeLeft--;
+  timerText.innerText='Time: '+timeLeft;
+  if(timeLeft<=0) endGame();
+},1000);
+
+function endGame(){
+  clearInterval(timer);
+  document.getElementById('finalScore').innerText=score;
+  document.getElementById('gameOverScreen').style.display='block';
+}
+
+function saveScore(){
+  let name = document.getElementById('playerName').value;
+  if(name){
+    const scoresRef = window.ref(window.database, "memory_scores");
+    window.push(scoresRef, {name, score});
+    location.reload();
+  }
+}
+
+// Load leaderboard
+firebase.database().ref("memory_scores").once("value", (snapshot)=>{
+  let data = snapshot.val();
+  if(data){
+    let leaderboard = Object.entries(data).sort((a,b)=>b[1].score-a[1].score).slice(0,5);
+    leaderboard.forEach(([key,record])=>{
+      let tr=document.createElement('tr');
+      tr.innerHTML=`<td>${record.name}</td><td>${record.score}</td>`;
+      document.getElementById('leaderboardTable').appendChild(tr);
+    });
+  }
+});
+
+</script>
+</body>
+</html>

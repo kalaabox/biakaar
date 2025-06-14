@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DNA & Bioinformatics Quiz Game</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <h1>🧬 DNA & Bioinformatics Quiz Game</h1>
+
+  <div class="score-board">
+    Score: <span id="score">0</span>
+  </div>
+
+  <div class="info">
+    <h3>📚 Learn: Mutations, Replication & Bioinformatics Basics</h3>
+    <ul>
+      <li><strong>Substitution:</strong> One base is replaced by another.</li>
+      <li><strong>Insertion:</strong> A new base is added.</li>
+      <li><strong>Deletion:</strong> A base is removed.</li>
+      <li><strong>Replication:</strong> DNA makes an exact copy of itself.</li>
+      <li><strong>BLAST:</strong> A tool for comparing gene sequences.</li>
+      <li><strong>FASTA:</strong> A text-based format for DNA/protein sequences.</li>
+    </ul>
+  </div>
+
+  <div class="game">
+    <p><strong>Original DNA:</strong> <span id="original-seq"></span></p>
+    <p><strong>Mutated DNA:</strong> <span id="mutated-seq"></span></p>
+
+    <label for="guess">Guess Mutation Type:</label>
+    <select id="guess">
+      <option value="Substitution">Substitution</option>
+      <option value="Insertion">Insertion</option>
+      <option value="Deletion">Deletion</option>
+    </select>
+    <button onclick="checkMutationAnswer()">Check Answer</button>
+    <p id="mutation-result"></p>
+
+    <hr>
+
+    <div class="question">
+      <p id="quiz-question"></p>
+      <div id="options"></div>
+      <button onclick="nextQuestion()">Next Question</button>
+      <p id="quiz-result"></p>
+    </div>
+
+    <button onclick="startGame()">New Mutation</button>
+  </div>
+  <script>
+// Disable Right Click
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// Disable F12, Ctrl+Shift+I, Ctrl+U, Ctrl+Shift+J
+document.onkeydown = function(e) {
+    if(e.keyCode == 123) { // F12
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+       return false;
+    }
+};
+
+// Disable Mouse Middle Click
+document.addEventListener("mousedown", function(e){
+  if(e.button == 1){
+    e.preventDefault();
+    return false;
+  }
+}, true);
+
+// Disable Dragging
+document.addEventListener('dragstart', event => event.preventDefault());
+</script>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

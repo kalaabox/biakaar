@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BioAkaar | Services</title>
+  <link rel="stylesheet" href="css/home.css">
+  <style>
+    .hero input, .hero select, .hero textarea {
+  width: 80%;
+  max-width: 500px;
+  padding: 12px;
+  margin: 12px auto;
+  border: 2px solid #3f9b70;
+  border-radius: 12px;
+  font-size: 1rem;
+  outline: none;
+  display: block;
+  box-shadow: 0 4px 8px rgba(63,155,112,0.2);
+  transition: 0.3s;
+}
+
+.hero input:focus, .hero select:focus, .hero textarea:focus {
+  border-color: #25a874;
+  box-shadow: 0 0 10px rgba(37,168,116,0.4);
+}
+
+.hero button {
+  background: linear-gradient(to right, #25a874, #1d8263);
+  color: #fff;
+  padding: 14px 28px;
+  margin-top: 16px;
+  border: none;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: 0.4s;
+}
+
+.hero button:hover {
+  background: linear-gradient(to right, #1d8263, #25a874);
+  transform: translateY(-2px);
+}
+
+.hero select {
+  appearance: none;
+  background-color: #fff;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%233f9b70" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position-x: 95%;
+  background-position-y: 50%;
+}
+
+.hero textarea {
+  resize: vertical;
+  min-height: 80px;
+  max-height: 200px;
+}
+  </style>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD_VtMcL42y4GEJRNtL9nSpwNjL35zFh9A",
+      authDomain: "score-1307f.firebaseapp.com",
+      databaseURL: "https://score-1307f-default-rtdb.firebaseio.com",
+      projectId: "score-1307f",
+      storageBucket: "score-1307f.appspot.com",
+      messagingSenderId: "796173214179",
+      appId: "1:796173214179:web:42e6b31563932e869b00d6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    window.database = database;
+    window.ref = ref;
+    window.push = push;
+  </script>
+</head>
+<body>
+
+<header>
+  <div class="logo">🌿 BioAkaar</div>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="games.html">Games</a></li>
+      <li><a href="team.html">Team</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="notes.html">Notes</a></li>
+      <li><a href="community.html">Review</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="ai.html">Search</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Our Services</h1>
+  <p>Explore what our BioAkaar team can do for you:</p>
+</section>
+
+<section class="cards">
+  <div class="card"><h3>Metagenomic Analysis</h3><p>Complete microbial community analysis from environmental samples.</p></div>
+  <div class="card"><h3>Next-Generation Sequencing (NGS)</h3><p>DNA and RNA sequencing services with modern analysis pipelines.</p></div>
+  <div class="card"><h3>Sequence Alignment</h3><p>Multiple and pairwise alignment using advanced tools.</p></div>
+  <div class="card"><h3>Data Analysis</h3><p>Bioinformatics data handling, visualization, and interpretation.</p></div>
+  <div class="card"><h3>BLAST</h3><p>Sequence similarity search with custom parameters and reporting.</p></div>
+  <div class="card"><h3>Clustal</h3><p>Multiple sequence alignment with tree generation support.</p></div>
+  <div class="card"><h3>Notes Making</h3><p>Custom study material preparation for students and projects.</p></div>
+</section>
+
+<section class="hero">
+  <h2>Request a Service</h2>
+  <input type="text" id="name" placeholder="Your Name">
+  <input type="text" id="contact" placeholder="Your Contact Number">
+  <select id="service">
+    <option value="">-- Select Service --</option>
+    <option value="Metagenomic Analysis">Metagenomic Analysis</option>
+    <option value="Next-Generation Sequencing">Next-Generation Sequencing</option>
+    <option value="Sequence Alignment">Sequence Alignment</option>
+    <option value="Data Analysis">Data Analysis</option>
+    <option value="BLAST">BLAST</option>
+    <option value="Clustal">Clustal</option>
+    <option value="Notes Making">Notes Making</option>
+  </select>
+  <textarea id="message" placeholder="Your Message / Details" rows="3"></textarea>
+  <button onclick="submitRequest()">Submit Request</button>
+</section>
+
+<script>
+function submitRequest(){
+  const name = document.getElementById('name').value;
+  const contact = document.getElementById('contact').value;
+  const service = document.getElementById('service').value;
+  const message = document.getElementById('message').value;
+
+  if(name && contact && service){
+    const reqRef = window.ref(window.database, "serviceRequests");
+    window.push(reqRef, {name, contact, service, message});
+    alert("Your service request has been submitted!");
+    location.reload();
+  } else {
+    alert("Please fill all required fields!");
+  }
+}
+
+
+// Disable Right Click
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// Disable F12, Ctrl+Shift+I, Ctrl+U, Ctrl+Shift+J
+document.onkeydown = function(e) {
+    if(e.keyCode == 123) { // F12
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+       return false;
+    }
+};
+
+// Disable Mouse Middle Click
+document.addEventListener("mousedown", function(e){
+  if(e.button == 1){
+    e.preventDefault();
+    return false;
+  }
+}, true);
+
+// Disable Dragging
+document.addEventListener('dragstart', event => event.preventDefault());
+
+</script>
+
+<footer>© 2025 BioAkaar Team</footer>
+</body>
+</html>

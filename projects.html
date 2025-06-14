@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Our Projects | BioAkaar</title>
+  <link rel="stylesheet" href="css/projects.css">
+</head>
+<body>
+
+<header>
+  <div class="logo">🌿 BioAkaar</div>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="games.html">Games</a></li>
+      <li><a href="team.html">Team</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="notes.html">Notes</a></li>
+      <li><a href="community.html">Review</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="ai.html">Search</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Our Projects</h1>
+  <p>All projects are responsive </p>
+  <div class="project-cards">
+    <div class="card">
+      <div class="project-img">📊</div>
+      <h3>Genome Analysis</h3>
+      <p>Analyze DNA sequences</p>
+      <a href="https://madhuravishe.github.io/complement/" class="btn">Visit</a>
+    </div>
+
+    <div class="card">
+      <div class="project-img">🧬</div>
+      <h3>ELISA</h3>
+      <p>Diagnosis of Disease Based on Immune Response</p>
+      <a href="https://madhuravishe.github.io/ELISA-/" class="btn">Visit</a>
+    </div>
+
+    <div class="card">
+      <div class="project-img">📝</div>
+      <h3>Pharmagenomics</h3>
+      <p>Interactive notes </p>
+      <a href="https://madhuravishe.github.io/Pharmagenomics-assignment-and-quiz/" class="btn">Visit</a>
+    </div>
+
+    <div class="card">
+      <div class="project-img">📖</div>
+      <h3>Transcription</h3>
+      <p>DNA to mRNA and tRNA Transcription</p>
+      <a href="https://madhuravishe.github.io/TRANSCRIPT/" class="btn">Visit</a>
+    </div>
+
+    <div class="card">
+      <div class="project-img">🎮</div>
+      <h3>BioGames</h3>
+      <p>Biology based quiz</p>
+      <a href="https://madhuravishe.github.io/biogame/" class="btn">Visit</a>
+    </div>
+
+    <div class="card">
+      <div class="project-img">📑</div>
+      <h3>Data Reports</h3>
+      <p>Using Bioinformatics Tools </p>
+      <a href="https://madhuravishe.github.io/report/" class="btn">Visit</a>
+    </div>
+
+    <div class="card">
+      <div class="project-img">🌿</div>
+      <h3>DNA Replication</h3>
+      <p>Learn about DNA replication </p>
+      <a href="https://madhuravishe.github.io/REPLICATION/" class="btn">Visit</a>
+    </div>
+
+    <div class="card">
+      <div class="project-img">💾</div>
+      <h3>Metagenomic Analysis</h3>
+      <p>Analysis using Kraken and QIIME2</p>
+      <a href="https://madhuravishe.github.io/metagenomic/" class="btn">Visit</a>
+    </div>
+
+    <div class="card">
+      <div class="project-img">📡</div>
+      <h3>Sequence Analyzer</h3>
+      <p>Prototype Website for Biology </p>
+      <a href="https://madhuravishe.github.io/seq-analyzer/" class="btn">Visit</a>
+    </div>
+
+    <div class="card">
+      <div class="project-img">📡</div>
+      <h3>DATA Analysis</h3>
+      <p>Using Python</p>
+      <a href="https://madhuravishe.github.io/phythonanalysis/" class="btn">Visit</a>
+    </div>
+  </div>
+</section>
+<script>
+// Disable Right Click
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// Disable F12, Ctrl+Shift+I, Ctrl+U, Ctrl+Shift+J
+document.onkeydown = function(e) {
+    if(e.keyCode == 123) { // F12
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+       return false;
+    }
+};
+
+// Disable Mouse Middle Click
+document.addEventListener("mousedown", function(e){
+  if(e.button == 1){
+    e.preventDefault();
+    return false;
+  }
+}, true);
+
+// Disable Dragging
+document.addEventListener('dragstart', event => event.preventDefault());
+</script>
+
+<footer>
+  © 2025 BioAkaar Team
+</footer>
+
+</body>
+</html>

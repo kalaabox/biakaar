@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BioAkaar | Home</title>
+  <link rel="stylesheet" href="css/home.css">
+  
+</head>
+<body>
+
+<header>
+  <div class="logo">🌿 BioAkaar</div>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="games.html">Games</a></li>
+      <li><a href="team.html">Team</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="notes.html">Notes</a></li>
+      <li><a href="community.html">Review</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="ai.html">Search</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Welcome to BioAkaar</h1>
+  <p>Your friendly bioinformatics platform for learning biology, DNA, genes, mutations and more — powered by students, for students.</p>
+  <a href="services.html" class="btn">Services </a>
+</section>
+
+<section class="info-section">
+  <h2>Latest Bioinformatics & Genomics Technologies</h2>
+  <div class="cards">
+    <div class="card">
+      <h3>Genetic Sequencing</h3>
+      <p>Discover how genes are decoded and used for research, disease study, and personalized medicine.</p>
+    </div>
+    <div class="card">
+      <h3>Metagenomics</h3>
+      <p>Study of microbial communities directly from their environments without culturing them in lab.</p>
+    </div>
+    <div class="card">
+      <h3>Next Generation Sequencing (NGS)</h3>
+      <p>High-throughput sequencing technology for faster, cheaper, and deeper genetic analysis.</p>
+    </div>
+    <div class="card">
+      <h3>Bioinformatics Tools</h3>
+      <p>Software and online platforms to analyze DNA, RNA, proteins, structures and biological networks.</p>
+    </div>
+    <div class="card">
+      <h3>Nanobiotechnology</h3>
+      <p>Integration of nanotech in biotechnology for advanced drug delivery, diagnostics, and therapies.</p>
+    </div>
+      <div class="card">
+    <h3>CRISPR-Cas9 Technology</h3>
+    <p>A powerful tool for editing genes with precision by cutting DNA at specific locations.</p>
+  </div>
+  <div class="card">
+    <h3>Transcriptomics</h3>
+    <p>Study of complete RNA transcripts produced by the genome to understand gene expression patterns.</p>
+  </div>
+  <div class="card">
+    <h3>Father of Genetics</h3>
+    <p>Gregor Mendel is known as the Father of Genetics for his pea plant inheritance experiments.</p>
+  </div>
+  <div class="card">
+    <h3>Inheritance</h3>
+    <p>The process of passing genetic traits from parents to offspring through genes and chromosomes.</p>
+  </div>
+  <div class="card">
+    <h3>Gene Therapy</h3>
+    <p>Technique of introducing, removing or altering genetic material within a person’s cells to treat disease.</p>
+  </div>
+  
+</div>
+     
+  </div>
+</section>
+
+<section class="contact">
+  <h2>Contact Us</h2>
+  <p><strong>Mobile:</strong> 📞 7238847403</p>
+  <p><strong>Email:</strong> 📧 vindvishal394@gamil.com</p>
+</section>
+<script>
+// Disable Right Click
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// Disable F12, Ctrl+Shift+I, Ctrl+U, Ctrl+Shift+J
+document.onkeydown = function(e) {
+    if(e.keyCode == 123) { // F12
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+       return false;
+    }
+};
+
+// Disable Mouse Middle Click
+document.addEventListener("mousedown", function(e){
+  if(e.button == 1){
+    e.preventDefault();
+    return false;
+  }
+}, true);
+
+// Disable Dragging
+document.addEventListener('dragstart', event => event.preventDefault());
+</script>
+
+<footer>
+  © 2025 BioAkaar Team
+</footer>
+
+</body>
+</html>

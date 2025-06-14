@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Game | BioAkaar</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD_VtMcL42y4GEJRNtL9nSpwNjL35zFh9A",
+      authDomain: "score-1307f.firebaseapp.com",
+      databaseURL: "https://score-1307f-default-rtdb.firebaseio.com",
+      projectId: "score-1307f",
+      storageBucket: "score-1307f.appspot.com",
+      messagingSenderId: "796173214179",
+      appId: "1:796173214179:web:42e6b31563932e869b00d6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    window.db = db;
+    window.ref = ref;
+    window.push = push;
+    window.onValue = onValue;
+
+    // Disable Right Click
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// Disable F12, Ctrl+Shift+I, Ctrl+U, Ctrl+Shift+J
+document.onkeydown = function(e) {
+    if(e.keyCode == 123) { // F12
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+       return false;
+    }
+};
+
+// Disable Mouse Middle Click
+document.addEventListener("mousedown", function(e){
+  if(e.button == 1){
+    e.preventDefault();
+    return false;
+  }
+}, true);
+
+// Disable Dragging
+document.addEventListener('dragstart', event => event.preventDefault());
+  </script>
+
+  <style>
+   body {
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+  background: linear-gradient(135deg, #a8edea, #fed6e3);
+  margin: 0;
+  padding: 20px;
+  color: #333;
+}
+
+h1 {
+  color: #004d40;
+  font-size: 2.2rem;
+  margin-bottom: 20px;
+}
+
+h2, h3 {
+  color: #00796b;
+}
+
+input[type="text"] {
+  padding: 12px;
+  font-size: 18px;
+  border-radius: 8px;
+  border: 2px solid #26a69a;
+  width: 80%;
+  max-width: 300px;
+  margin-bottom: 20px;
+}
+
+button {
+  padding: 14px 28px;
+  margin: 12px;
+  font-size: 18px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #26c6da, #009688);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+button:hover {
+  background: linear-gradient(135deg, #009688, #00796b);
+  transform: translateY(-2px);
+}
+
+#quizBox, #resultBox, #leaderboard {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 20px;
+  background: #ffffffc9;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+#timer {
+  font-size: 24px;
+  color: #d32f2f;
+  margin: 10px;
+  font-weight: bold;
+}
+
+#score, #badge {
+  font-size: 20px;
+  margin: 8px;
+}
+
+#options {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 20px auto;
+  max-width: 400px;
+}
+
+#options button {
+  width: 100%;
+  font-size: 18px;
+  padding: 12px;
+  background: linear-gradient(135deg, #26c6da, #26a69a);
+}
+
+#options button:hover {
+  background: linear-gradient(135deg, #26a69a, #00796b);
+}
+
+table {
+  margin: auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 600px;
+}
+
+td, th {
+  padding: 14px 20px;
+  border: 1px solid #009688;
+  font-size: 16px;
+}
+
+th {
+  background: #004d40;
+  color: #fff;
+}
+
+tr:nth-child(even) {
+  background: #f0f0f0;
+}
+
+tr:hover {
+  background: #e0f2f1;
+}
+
+@media (max-width: 600px) {
+  h1 { font-size: 1.8rem; }
+  button { font-size: 16px; padding: 12px 24px; }
+  #options { max-width: 100%; }
+  input[type="text"] { width: 90%; }
+  #timer, #score, #badge { font-size: 18px; }
+  td, th { font-size: 14px; padding: 10px 14px; }
+}
+
+  </style>
+</head>
+<body>
+  
+
+<h1>BioAkaar Quiz Game</h1>
+<div id="startScreen">
+  <input type="text" id="playerName" placeholder="Enter your Name" style="padding:10px; font-size:16px;">
+  <br>
+  <button onclick="startGame('biology')">Start Biology Quiz</button>
+  <button onclick="startGame('it')">Start IT Quiz</button>
+</div>
+
+<div id="quizBox">
+  <h2 id="questionText"></h2>
+  <div id="options"></div>
+  <div id="timer">Time: 12</div>
+  <div id="score">Score: 0</div>
+  <div id="badge"></div>
+</div>
+
+<div id="resultBox">
+  <h2>Game Over!</h2>
+  <p id="finalScore"></p>
+  <button onclick="location.reload()">Play Again</button>
+</div>
+
+<div id="leaderboard">
+  <h3>Leaderboard</h3>
+  <table id="leaderboardTable">
+    <tr><th>Name</th><th>Category</th><th>Score</th><th>Badge</th></tr>
+  </table>
+</div>
+
+<script>
+const questions = {
+  biology: [
+    { q: "What is the full form of DNA?", options: ["Deoxyribo Nucleic Acid", "Deoxy Nucleic Acid", "Ribo Nucleic Acid"], answer: "Deoxyribo Nucleic Acid" },
+    { q: "Which organelle performs photosynthesis?", options: ["Mitochondria", "Chloroplast", "Ribosome"], answer: "Chloroplast" },
+    // Baaki 198 questions tu bhar lena
+    { q:"mRNA ka kaam hota hai:", options:["Protein synthesis carry message","Energy supply","Structural support","Replicate DNA"], a:"Protein synthesis carry message" },
+  { q:"Watson–Crick ne DNA ka structure propose kiya:", options:["1953","1945","1960","1930"], a:"1953" },
+  { q:"Enzyme jise DNA replication me primer attach karta hai:", options:["Primase","Ligase","Helicase","Polymerase"], a:"Primase" },
+
+  // Hard
+  { q:"PCR (Polymerase Chain Reaction) me primer concentration usually kitni hoti hai?", options:["0.1–1 μM","10–20 mM","5–10 M","100–200 μM"], a:"0.1–1 μM" },
+  { q:"Recombinant DNA me restriction enzyme EcoRI site kya hoti hai?", options:["5’-GAATTC-3’","5’-GGATCC-3’","5’-AAGCTT-3’","5’-CTCGAG-3’"], a:"5’-GAATTC-3’" },
+  { q:"Genetic code ka reading frame set karne wala genetic element:", options:["Start codon","Stop codon","Intron","Promoter"], a:"Start codon" },
+
+  // Very Hard
+  { q:"tRNA ki secondary structure kya hoti hai?", options:["Cloverleaf","Hairpin","G-quadruplex","Z-DNA"], a:"Cloverleaf" },
+  { q:"Biotechnology me 'Southern blotting' kis cheez ke liye use hota hai?", options:["DNA detection","RNA quantification","Protein separation","Cell culture"], a:"DNA detection" },
+  { q:"CRISPR–Cas9 me Cas9 enzyme ka function kya hota hai?", options:["DNA cut","RNA guide","Protein fold","Cell signaling"], a:"DNA cut" },
+  { q:"tRNA sabse chhota RNA molecule hota hai?", options:["True","False"], a:"True" },
+  { q:"DNA replication ki site hoti hai:", options:["Replication fork","Ribosome","Golgi","Nucleus"], a:"Replication fork" },
+  { q:"Leading strand me enzyme kaam hota hai:", options:["DNA polymerase III","DNA polymerase I","Ligase","Helicase"], a:"DNA polymerase III" },
+  { q:"RNA polymerase me promoter locate hoti hai:", options:["Upstream of gene","Downstream","Within intron","In telomere"], a:"Upstream of gene" },
+  { q:"All organism me genetic code stop codons kitne hote hain?", options:["3","2","4","1"], a:"3" },
+
+  // Hard (Q21–30)
+  { q:"Okazaki fragments synthesis hoti hai:", options:["Lagging strand","Leading strand","rRNA","mRNA"], a:"Lagging strand" },
+  { q:"DNA gyrase ka kaam hota hai:", options:["Relieve supercoiling","Base excision","Methylation","Ligation"], a:"Relieve supercoiling" },
+  { q:"Exons aur introns ka splicing kitne stages me hota hai?", options:["2","3","1","4"], a:"2" },
+  { q:"Bioinformatics me sequence alignment me 'BLOSUM' matrix kis liye use hoti hai?", options:["Protein similarity","DNA similarity","RNA folding","Metabolism"], a:"Protein similarity" },
+  { q:"Restriction enzymes palindrome sequence kitne bases ka hota hai?", options:["4-8","2-4","9-12","12-16"], a:"4-8" },
+  { q:"PCR me annealing temperature depend karta hai primer ke ____ par:", options:["Tm value","Length","GC content","Antenna"], a:"Tm value" },
+  { q:"Reverse transcriptase use hota hai:", options:["cDNA banane mein","Protein synthesis","Lipid synthesis","DNA methylation"], a:"cDNA banane mein" },
+  { q:"CRISPR RNA guide length hoti hai approx:", options:["20 nt","5 nt","50 nt","100 nt"], a:"20 nt" },
+  { q:"Gene therapy me viral vector commonly use hota hai:", options:["Adenovirus","E. coli","S. cerevisiae","B subtilis"], a:"Adenovirus" },
+  { q:"Transgenic plants me selectable marker gene hota hai:", options:["Antibiotic resistance","Fluorescent protein","Hormone receptor","Ribosomal RNA"], a:"Antibiotic resistance" },
+
+  // Very Hard (Q31–40)
+  { q:"Southern blotting me DNA probe labeled hoti hai:", options:["Radioactive or fluorescent","Only fluorescent","Protein se","Enzyme se"], a:"Radioactive or fluorescent" },
+  { q:"Western blotting me detect hota hai:", options:["Proteins","DNA","RNA","Lipids"], a:"Proteins" },
+  { q:"Sanger sequencing me ddNTP reverse primers me introduce hota hai:", options:["Low conc.","High conc.","Equal conc.","No use"], a:"Low conc." },
+  { q:"Next-Gen sequencing me 'paired-end' read kya hota hai?", options:["Donon ends se sequence","Single end","Primer replacement","No concept"], a:"Donon ends se sequence" },
+  { q:"qPCR me fluorescent dye SYBR Green bind hota hai:", options:["Double-stranded DNA","Single-stranded RNA","Protein","Lipids"], a:"Double-stranded DNA" },
+  { q:"Northern blotting me RNA separate hoti hai:", options:["Agarose gel with formaldehyde","Polyacrylamide","SDS-PAGE","Chromatography"], a:"Agarose gel with formaldehyde" },
+  { q:"Flow cytometry me cell sort hoti hai:", options:["Based on fluorescence","Light refraction","Mass","Shape"], a:"Based on fluorescence" },
+  { q:"Microarray me measure kiya jata hai:", options:["Gene expression","Protein structure","Metabolite level","Cell division"], a:"Gene expression" },
+  { q:"Nanobiotechnology me nanoparticles ka size range hota hai:", options:["1-100 nm","100-1000 nm","Below 1 nm","Above 1000 nm"], a:"1-100 nm" },
+  { q:"Phytography ka kaam hota hai:", options:["Plant tissue culture analysis","Plant photography","Plant genetics","Plant taxonomy"], a:"Plant tissue culture analysis" },
+   { q:"Prokaryote mein nucleus hota hai?", options:["True","False"], a:"False" },
+  { q:"Helicase ka function kya hai?", options:["Unwind DNA","Join fragments","Add bases","Proofread DNA"], a:"Unwind DNA" },
+  { q:"DNA replication me primer hote hain:", options:["RNA","DNA","Protein","Lipid"], a:"RNA" },
+  { q:"Enzyme ligase kya karta hai?", options:["Joins DNA fragments","Unwinds DNA","Breaks DNA","Synthesizes RNA"], a:"Joins DNA fragments" },
+  { q:"Okazaki fragments hote hain:", options:["Lagging strand par","Leading strand par","mRNA par","tRNA par"], a:"Lagging strand par" },
+
+  // Hard (Q46–55)
+  { q:"Bioinformatics me FASTA format file hoti hai?", options:["True","False"], a:"True" },
+  { q:"Reverse transcriptase use hota hai HIV replication mein?", options:["True","False"], a:"True" },
+  { q:"PCR process ka initial step hota hai:", options:["Denaturation","Annealing","Extension","Quantification"], a:"Denaturation" },
+  { q:"SNP ka full form kya hai?", options:["Single Nucleotide Polymorphism","Short Nucleotide Polypeptide","Single Nucleotide Protein","Simple Nucleotide Polymers"], a:"Single Nucleotide Polymorphism" },
+  { q:"Gene expression control ke liye operon ka use hota hai:", options:["Prokaryotes","Eukaryotes","Viruses","Archaea"], a:"Prokaryotes" },
+  { q:"Plasmid vector commonly use hota hai:", options:["E. coli cloning","Protein synthesis","DNA repair","RNA interference"], a:"E. coli cloning" },
+  { q:"Western blot me antibody kya detect karti hai?", options:["Protein","DNA","RNA","Lipid"], a:"Protein" },
+  { q:"Northern blot me detect hoti hai:", options:["RNA","DNA","Protein","Metabolites"], a:"RNA" },
+  { q:"Southern blot me probe bind hota hai:", options:["DNA","RNA","Protein","Water"], a:"DNA" },
+  { q:"Karyotyping se pata chalta hai:", options:["Chromosome structure","Protein folding","RNA sequence","Lipid profile"], a:"Chromosome structure" },
+
+  // Very Hard (Q56–65)
+  { q:"Microarray chip me gene expression kitna hota hai?", options:["Simultaneously thousands of genes","10 genes","1 gene","100 genes"], a:"Simultaneously thousands of genes" },
+  { q:"Genome editing me TALENs stand for:", options:["Transcription Activator-Like Effector Nucleases","Total Activity Linked Enzyme Nucleases","Tandem Allele Light-binding Exonucleases","Translation Associated Labeled Enzyme Nucleotides"], a:"Transcription Activator-Like Effector Nucleases" },
+  { q:"Bioinformatics me BLAST ka full form kya hai?", options:["Basic Local Alignment Search Tool","Biological Linear Alignment Search Tool","Basic Linked Array Sequence Tool","Binary Linked Alignment Search Time"], a:"Basic Local Alignment Search Tool" },
+  { q:"Phylogenetic tree banane ke liye algorithm?", options:["Neighbor-Joining","QuickSort","Dijkstra","FFT"], a:"Neighbor-Joining" },
+  { q:"Nanobiotechnology me liposome ka use:", options:["Drug delivery","Microscope slide","DNA sequencing","Protein folding"], a:"Drug delivery" },
+  { q:"Gene therapy me siRNA ka use hota hai:", options:["Gene silencing","Gene insertion","DNA repair","Protein enhancement"], a:"Gene silencing" },
+  { q:"CADD me docking ka matlab hota hai:", options:["Ligand-protein simulation","DNA replication","RNA transcription","Cell imaging"], a:"Ligand-protein simulation" },
+  { q:"Phytography me plant variety preserve hoti hai:", options:["Seed banks","Disc storage","Liquid cultures","Dry ice"], a:"Seed banks" },
+  { q:"Animal biotechnology me somatic cell nuclear transfer ka use hai:", options:["Cloning","Protein extraction","DNA sequencing","Transcription"], a:"Cloning" },
+  { q:"Protein folding prediction ke liye algorithm?", options:["Rosetta","BLAST","ClustalW","PDB2PQR"], a:"Rosetta" },
+  { q:"RNA interference me small RNA ka kaam hota hai?", options:["Gene silencing","Protein folding","Cell transport","DNA repair"], a:"Gene silencing" },
+  { q:"Eukaryotic cells me splicing kaha hoti hai?", options:["Nucleus","Cytoplasm","Mitochondria","Ribosome"], a:"Nucleus" },
+  { q:"Bioinformatics me 'GenBank' kya hai?", options:["Sequence database","Protein fold","Cell image","RNA structure"], a:"Sequence database" },
+  { q:"PCR me 'extension step' temperature hota hai approx:", options:["72°C","50°C","94°C","37°C"], a:"72°C" },
+  { q:"Protein translation hota hai ribosome ke:", options:["P-site aur A-site","C-site","B-site","D-site"], a:"P-site aur A-site" },
+
+  // Hard (Q71–80)
+  { q:"Enzyme helicase DNA unwind karte hai by:", options:["Breaking H-bonds","Adding nucleotides","Forming RNA","Protein synthesis"], a:"Breaking H-bonds" },
+  { q:"PCR buffer me Mg2+ ka role hota hai:", options:["DNA polymerase cofactor","Primer binding","pH adjust","Stabilize primers"], a:"DNA polymerase cofactor" },
+  { q:"Genetic code universal hai because:", options:["Most organisms same codons","Different species code vary","Depends same","None"], a:"Most organisms same codons" },
+  { q:"Bioinformatics me 'ORF' stands for:", options:["Open Reading Frame","Original RNA Factor","Organized RNA Fragment","Open Restriction Fragment"], a:"Open Reading Frame" },
+  { q:"Restriction-ligation cloning me 'sticky ends' useful hote hain:", options:["True","False"], a:"True" },
+  { q:"RNA reverse transcription me enzyme polymerase:", options:["Reverse transcriptase","DNA pol I","RNA pol II","Ligase"], a:"Reverse transcriptase" },
+  { q:"Proteomics me mass spectrometry ka use hota hai:", options:["Protein identification","DNA repair","RNA analysis","Cell imaging"], a:"Protein identification" },
+  { q:"Nanobiotech me quantum dots use hote hain:", options:["Fluorescent tags","Magnetic storage","Protein synthesis","DNA sequencing"], a:"Fluorescent tags" },
+  { q:"Phytohormone auxin plant growth regulate karta hai:", options:["True","False"], a:"True" },
+  { q:"Bioinformatics me 'BLAT' tool similar hai:", options:["BLAST ka faster version","PCR primer","Protein fold","Sequencing"], a:"BLAST ka faster version" },
+
+  // Very Hard (Q81–90)
+  { q:"Gene knockout me homologous recombination use hota hai:", options:["True","False"], a:"True" },
+  { q:"CRISPR me PAM sequence kya denote karta hai:", options:["Cas9 binding site","Promoter aktif","Ribosome site","Terminator"], a:"Cas9 binding site" },
+  { q:"Next-gen sequencing me 'coverage depth' ka matlab hota hai:", options:["Kitni baar base read hui","Kitne gene hain","Kitne protein hain","Kitne intron hain"], a:"Kitni baar base read hui" },
+  { q:"RNA-Seq experiment se kya pata chalta hai:", options:["Gene expression profile","DNA methylation","Protein folding","Cell structure"], a:"Gene expression profile" },
+  { q:"Protease enzyme kya karta hai:", options:["Protein ko todta hai","DNA ko todta hai","RNA ne banate","Lipid banata"], a:"Protein ko todta hai" },
+  { q:"Phytochrome photoreceptor light me help karta hai plant me:", options:["True","False"], a:"True" },
+  { q:"DNA microarray me fluorescent signal measure hota hai gene:", options:["Expression","Sequence change","Mutation","Translation"], a:"Expression" },
+  { q:"Cadd me pharmacophore mapping use hota hai:", options:["Active site identification","Cell imaging","PCR","Sequencing"], a:"Active site identification" },
+  { q:"Somatic cell nuclear transfer me diploid nucleus transfer hoti hai:", options:["True","False"], a:"True" },
+  { q:"DNA methylation regulatory mechanism hai gene:", options:["Activation/silencing","Protein translation","RNA splicing","Genome packaging"], a:"Activation/silencing" }
+  ],
+  it: [
+    { q: "Python is a _____?", options: ["Snake", "Programming Language", "Game"], answer: "Programming Language" },
+    { q: "Which is not an O.S?", options: ["Linux", "Windows", "MS Word"], answer: "MS Word" },
+    // Baaki 198 questions tu bhar lena
+    { q:"Python me variable assignment ka symbol kya hota hai?", options:["=","==",":","+="], a:"=" },
+  { q:"Java me string literal ko define karne ke liye use hota hai:", options:['""',"''","` `","<>"], a:'""' },
+  { q:"Linux me current directory dekhne ke liye kaunsa command hota hai?", options:["pwd","ls","cd","dir"], a:"pwd" },
+  { q:"C++ me object-oriented programming ka keyword kya hai?", options:["class","func","object","struct"], a:"class" },
+
+  // Medium
+  { q:"Python me list comprehension syntax kya hota hai?", options:["[x for x in list]","(x in list)","{x in list}","<x for x in list>"], a:"[x for x in list]" },
+  { q:"Java me method overloading hota hai, method overriding se fark kya hai?", options:["Same name, different signature","Different name","Inheritance nahi", "Only public methods"], a:"Same name, different signature" },
+  { q:"Linux me user permission change karne ke liye command kya hai?", options:["chmod","chown","chgrp","passchange"], a:"chmod" },
+
+  // Hard
+  { q:"C++ me 'virtual' keyword kis liye use hota hai?", options:["Polymorphism","Encapsulation","Inheritance","Abstraction"], a:"Polymorphism" },
+  { q:"Python me 'decorators' primarily kis cheez ke liye use hote hain?", options:["Function enhancement","Variable initialization","Looping","Error handling"], a:"Function enhancement" },
+  { q:"R me data frame banana hota hai to kaunsa function use hota hai?", options:["data.frame()","frame.data()","df.create()","makeDF()"], a:"data.frame()" },
+
+  // Very Hard
+  { q:"Java me concurrency me 'volatile' keyword kya ensure karta hai?", options:["Memory visibility","Type safety","Garbage collection","Class loading"], a:"Memory visibility" },
+  { q:"Linux me 'grep -r \"TODO\" .' command kya karta hai?", options:["Recursively search for TODO","Replace TODO","Delete TODO","Count TODO"], a:"Recursively search for TODO" },
+  { q:"C++ STL me 'std::map' kis data structure ka example hai?", options:["Balanced tree","Hash table","Linked list","Stack"], a:"Balanced tree" },
+  { q:"Python me list me add karne ke liye method?", options:["append()","add()","push()","insert()"], a:"append()" },
+  { q:"Java me exception handle kiya jata hai:", options:["try-catch","throw-catch","error-log","handle-ex"], a:"try-catch" },
+  { q:"Linux me directory change ka command:", options:["cd","mv","ls","home"], a:"cd" },
+  { q:"C++ me header file ke liye use hota hai:", options:["#include","#define","#using","%include"], a:"#include" },
+  { q:"R me vector banane ka syntax:", options:["c(1,2,3)","vector(1,2,3)","[1,2,3]","{1,2,3}"], a:"c(1,2,3)" },
+
+  // Hard (Q21–30)
+  { q:"Python me generator function return karta hai:", options:["Iterator","List","Tuple","Dict"], a:"Iterator" },
+  { q:"Java me 'this' keyword refer karta hai:", options:["Current object","Super class","Static member","Local var"], a:"Current object" },
+  { q:"Linux me background job start karne ke liye use:", options:["command &","run &","bg","start &"], a:"command &" },
+  { q:"C++ me pointer increment ka syntax:", options:["ptr++","(ptr)++","ptr.inc()","++ptr"], a:"ptr++" },
+  { q:"R me dataframe columns ko select karna:", options:["df$col","df[col]","select(df)","df->col"], a:"df$col" },
+  { q:"Data analysis me 'outlier' ka matlab hota hai:", options:["Extreme value","Mean","Median","Mode"], a:"Extreme value" },
+  { q:"Python me decorator use hota hai:", options:["Function enhancement","Class creation","Loop control","IO operation"], a:"Function enhancement" },
+  { q:"Java me ArrayList size change hoti hai:", options:["Dynamic","Fixed","Static","Constant"], a:"Dynamic" },
+  { q:"Linux command 'grep' filter karta hai by:", options:["Pattern","User","File size","Date"], a:"Pattern" },
+  { q:"C++ STL me 'vector' kis type ka container?", options:["Sequence container","Associative container","Unordered container","Adaptor"], a:"Sequence container" },
+
+  // Very Hard (Q31–40)
+  { q:"Python me context manager use hota hai for:", options:["Resource handling","Loop control","Object serialization","Math ops"], a:"Resource handling" },
+  { q:"Java me garbage collection ka trigger kaunsa hota hai:", options:["System.gc()","delete","destroy","free"], a:"System.gc()" },
+  { q:"Linux me 'chmod 755' ka matlab permissions?", options:["Owner rwx/Group rx/Others rx","Owner rx/Group rx/Others rx","Owner rw-/Group rw-/Others rw-","All rwx"], a:"Owner rwx/Group rx/Others rx" },
+  { q:"C++ me 'namespace' kyu use hota hai:", options:["Name conflict avoid karne ke liye","Memory allocation","IO operation","Randomization"], a:"Name conflict avoid karne ke liye" },
+  { q:"R me apply(df,2,mean) returns:", options:["Column-wise mean","Row-wise mean","Cell value","List"], a:"Column-wise mean" },
+  { q:"Python me 'lambda' keyword create karta hai:", options:["Anonymous function","Class","List","Dictionary"], a:"Anonymous function" },
+  { q:"Java me synchronized block use hota hai for:", options:["Thread safety","Looping","IO","Error handling"], a:"Thread safety" },
+  { q:"Linux me symbolic link banane ke liye:", options:["ln -s src dest","link src dest","mklink","symlink"], a:"ln -s src dest" },
+  { q:"C++ me 'std::shared_ptr' belong karta hai to:", options:["Smart pointer","Iterator","Container","Allocator"], a:"Smart pointer" },
+  { q:"Data analysis me 'PCA' ka full form kya hota hai?", options:["Principal Component Analysis","Primary Component Analysis","Partial Component Analysis","Principal Correlation Analysis"], a:"Principal Component Analysis" },
+  { q:"Python me dictionary key-value pair hota hai?", options:["True","False"], a:"True" },
+  { q:"Java me multi-catch exception possible hai?", options:["True","False"], a:"True" },
+  { q:"Linux me 'ls -a' kya show karta hai?", options:["Hidden files","Only folders","Only executables","Only text files"], a:"Hidden files" },
+  { q:"C++ me 'public:' keyword kis ka access control define karta hai?", options:["Member functions","Classes","Templates","Preprocessor"], a:"Member functions" },
+  { q:"R me ggplot2 package use hota hai for:", options:["Data visualization","Data storage","Data cleaning","Data input"], a:"Data visualization" },
+
+  // Hard (Q46–55)
+  { q:"Python me '__init__.py' file ka use hota hai in:", options:["Package definition","Module execution","Main function","Variable init"], a:"Package definition" },
+  { q:"Java me 'final' keyword use hota hai for:", options:["Prevent overriding","Destroy object","Start thread","Define class path"], a:"Prevent overriding" },
+  { q:"Linux me 'cron' command background me kya karta hai?", options:["Task scheduling","Execute at boot","Monitor network","List processes"], a:"Task scheduling" },
+  { q:"C++ template me 'typename T' define karta hai:", options:["Type parameter","Function name","Variable type","Loop counter"], a:"Type parameter" },
+  { q:"R me 'dplyr' me pipe operator hota hai", options:["%>%","::","!!","&&"], a:"%>%" },
+  { q:"Python me 'zip()' function return karta hai:", options:["Iterator of tuples","List of lists","String concatenation","Integer sum"], a:"Iterator of tuples" },
+  { q:"Java me 'Collections.sort()' kis interface use karta hai?", options:["List","Map","Set","Queue"], a:"List" },
+  { q:"Linux me 'grep -i' option kya karta hai?", options:["Case-insensitive search","Recursive search","Show line numbers","Count matches"], a:"Case-insensitive search" },
+  { q:"C++ me 'std::unique_ptr' kis cheez ke liye hota hai?", options:["Exclusive ownership","Shared ownership","Container","Iterator"], a:"Exclusive ownership" },
+  { q:"Data analysis me 'skewness' measure karta hai:", options:["Asymmetry of curve","Central peak","Spread","Outlier count"], a:"Asymmetry of curve" },
+
+  // Very Hard (Q56–65)
+  { q:"Python me 'asyncio' use hota hai for:", options:["Asynchronous programming","Threading","Database access","GUI"], a:"Asynchronous programming" },
+  { q:"Java me 'volatile' keyword memory me kya ensure karta hai?", options:["Visibility among threads","Encapsulation","Inheritance","Polymorphism"], a:"Visibility among threads" },
+  { q:"Linux me 'sed' tool kya karta hai?", options:["Stream text editing","Search files","Delete files","System stats"], a:"Stream text editing" },
+  { q:"C++ me 'operator overloading' allow hota hai for:", options:["Custom operator definition","Memory allocation","Garbage collection","Type safety"], a:"Custom operator definition" },
+  { q:"R me 'shiny' package use hota hai for:", options:["Web apps","Data storage","Statistical tests","Plotting"], a:"Web apps" },
+  { q:"Python me 'metaclass' use hota hai for:", options:["Dynamic class creation","Function calls","Memory management","Looping"], a:"Dynamic class creation" },
+  { q:"Java me 'Enum' type represent karta hai:", options:["Fixed set of constants","Dynamic arrays","Threads","Exceptions"], a:"Fixed set of constants" },
+  { q:"Linux me 'top' command show karta hai:", options:["Running processes","Directory structure","File size","User ID"], a:"Running processes" },
+  { q:"C++ STL me 'std::map' ka underlying structure kya hota hai?", options:["Red-black tree","Hash table","Array","Linked list"], a:"Red-black tree" },
+  { q:"Data analysis me 'ANOVA' test use hota hai for:", options:["Compare means of 3+ groups","Correlation","Regression","Time series"], a:"Compare means of 3+ groups" },
+  { q:"Python me 'self' keyword use hota hai kis mein?", options:["Instance methods","Static methods","Class variables","Global variables"], a:"Instance methods" },
+  { q:"Java me JDK aur JRE me difference hai:", options:["True","False"], a:"True" },
+  { q:"Linux me 'sudo' use hota hai:", options:["Elevated privileges","List files","Change dir","View process"], a:"Elevated privileges" },
+  { q:"C++ me virtual destructor zaroori hota hai inheritance me:", options:["True","False"], a:"True" },
+  { q:"R me 'summary()' function data ko summarize karta hai:", options:["True","False"], a:"True" },
+
+  // Hard (Q71–80)
+  { q:"Python me '__str__' method kya return karta hai?", options:["String representation of object","Integer value","List element","Function name"], a:"String representation of object" },
+  { q:"Java me 'interface' me variables hotey ho sakte hai by default:", options:["Public static final","Private","Protected","Default"], a:"Public static final" },
+  { q:"Linux me 'rsync' command ka use hota hai:", options:["File synchronization","Delete files","List files","System info"], a:"File synchronization" },
+  { q:"C++ me RAII ka concept kya relate karta hai:", options:["Resource management","Looping","Multithreading","IO"], a:"Resource management" },
+  { q:"R me 'tidyverse' ek collection hai packages ka:", options:["True","False"], a:"True" },
+  { q:"Python me 'list[-1]' return karta hai:", options:["Last element","First element","Length","Error"], a:"Last element" },
+  { q:"Java me Thread.sleep(milliseconds) chedta hai exception:", options:["InterruptedException","IOException","NullPointerException","SQLException"], a:"InterruptedException" },
+  { q:"Linux me 'du -h' comand kya show karta hai?", options:["Human readable disk usage","Disk unmount","Delete files","Network info"], a:"Human readable disk usage" },
+  { q:"C++ STL me 'deque' stands for:", options:["Double-ended queue","Direct sequence queue","Dynamic execution queue","Data enhanced queue"], a:"Double-ended queue" },
+  { q:"Data analysis me 'correlation coefficient' measure kis cheez ka?", options:["Linear relationship","Average","Variance","Standard deviation"], a:"Linear relationship" },
+
+  // Very Hard (Q81–90)
+  { q:"Python me 'metaclass' class creation me intervene karta hai:", options:["True","False"], a:"True" },
+  { q:"Java me 'transient' keyword kis field ke liye kaam karta hai?", options:["Serialization ko skip karne ke liye","Thread safety","Looping","Inheritance"], a:"Serialization ko skip karne ke liye" },
+  { q:"Linux me 'iptables' firewall configuration ke liye use hota hai:", options:["True","False"], a:"True" },
+  { q:"C++ me 'constexpr' compile-time constant create karta hai:", options:["True","False"], a:"True" },
+  { q:"R me 'ggplot(aes(x,y))+geom_line()' kya draw karta hai?", options:["Line graph","Bar graph","Scatter plot","Histogram"], a:"Line graph" },
+  { q:"Python me 'GIL' ka full form kya hai?", options:["Global Interpreter Lock","Garbage Internal Limit","General Input Library","Global Info Logger"], a:"Global Interpreter Lock" },
+  { q:"Java me 'Stream API' functional operations perform karta hai:", options:["True","False"], a:"True" },
+  { q:"Linux me 'mount /dev/sda1 /mnt' command karta hai:", options:["Attach partition","Format disk","Delete file","Move file"], a:"Attach partition" },
+  { q:"C++ me 'std::unique_lock' which lock type hota hai:", options:["Mutex with deferred locking","Recursive mutex","Timed mutex","Spin lock"], a:"Mutex with deferred locking" },
+  { q:"Data analysis me 'k-means clustering' unsupervised technique hoti hai:", options:["True","False"], a:"True" }
+  ]
+};
+
+let selectedCategory, currentQuestion, score=0, timer, timeLeft=12, badge="None";
+
+function startGame(category){
+  selectedCategory = category;
+  document.getElementById('startScreen').style.display='none';
+  document.getElementById('quizBox').style.display='block';
+  nextQuestion();
+}
+
+function nextQuestion(){
+  if(score>0 && score%40===0){
+    if(score==20) badge='Bronze';
+    else if(score==40) badge='Silver';
+    else if(score==60) badge='Gold';
+    else if(score==80) badge='Diamond';
+    else if(score==100) badge='Platinum';
+  }
+
+  const qList = questions[selectedCategory];
+  if(qList.length===0){ endGame(); return; }
+
+  let randIndex = Math.floor(Math.random()*qList.length);
+  currentQuestion = qList[randIndex];
+  qList.splice(randIndex,1);
+
+  document.getElementById('questionText').innerText = currentQuestion.q;
+  let optionHtml = '';
+  currentQuestion.options.forEach(opt=>{
+    optionHtml += `<button onclick="checkAnswer('${opt}')">${opt}</button>`;
+  });
+  document.getElementById('options').innerHTML = optionHtml;
+
+  timeLeft=12;
+  document.getElementById('timer').innerText = `Time: ${timeLeft}`;
+  clearInterval(timer);
+  timer = setInterval(()=>{ 
+    timeLeft--; 
+    document.getElementById('timer').innerText=`Time: ${timeLeft}`;
+    if(timeLeft<=0) endGame();
+  },1000);
+}
+
+function checkAnswer(selected){
+  if(selected===currentQuestion.answer){
+    score++;
+    document.getElementById('score').innerText=`Score: ${score}`;
+    document.getElementById('badge').innerText = `Badge: ${badge}`;
+    nextQuestion();
+  } else {
+    endGame();
+  }
+}
+
+function endGame(){
+  clearInterval(timer);
+  document.getElementById('quizBox').style.display='none';
+  document.getElementById('resultBox').style.display='block';
+  document.getElementById('finalScore').innerText=`Your Score: ${score}, Badge: ${badge}`;
+
+  const playerName = document.getElementById('playerName').value || 'Anonymous';
+  const scoresRef = window.ref(window.db, "quiz_scores");
+  window.push(scoresRef, {name:playerName, category:selectedCategory, score, badge});
+  loadLeaderboard();
+}
+
+function loadLeaderboard(){
+  document.getElementById('leaderboard').style.display='block';
+  window.onValue(window.ref(window.db,"quiz_scores"), (snapshot)=>{
+    let data = snapshot.val();
+    let table = document.getElementById('leaderboardTable');
+    table.innerHTML=`<tr><th>Name</th><th>Category</th><th>Score</th><th>Badge</th></tr>`;
+    if(data){
+      let sorted = Object.values(data).sort((a,b)=>b.score-a.score).slice(0,10);
+      sorted.forEach(r=>{
+        let row = `<tr><td>${r.name}</td><td>${r.category}</td><td>${r.score}</td><td>${r.badge}</td></tr>`;
+        table.innerHTML+=row;
+      });
+    }
+  });
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bio Typing Race | BioAkaar</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: linear-gradient(135deg, #d7f9f9, #b2ebf2);
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    #gameArea {
+      margin: 20px auto;
+      width: 90%;
+      max-width: 800px;
+      padding: 20px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 0 10px #44444430;
+    }
+    #track {
+      position: relative;
+      height: 80px;
+      background: #e0f7fa;
+      border: 2px solid #00796b;
+      margin: 20px 0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    #car {
+      position: absolute;
+      top: 10px;
+      left: 0;
+      height: 60px;
+      transition: 0.2s linear;
+    }
+    #paragraph {
+      padding: 15px;
+      background: #f0f0f0;
+      border-radius: 10px;
+      min-height: 60px;
+      margin: 10px 0;
+      font-size: 18px;
+    }
+    textarea {
+      width: 95%;
+      height: 100px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 18px;
+      border: none;
+      background: #00796b;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 10px;
+    }
+    button:hover {
+      background: #004d40;
+    }
+    #timer, #score {
+      font-size: 20px;
+      margin: 10px;
+    }
+    #leaderboard {
+      margin-top: 20px;
+      background: #ffffff;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #44444430;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #leaderboard h3 {
+      margin-top: 0;
+    }
+    table {
+      width: 100%;
+    }
+    td {
+      padding: 5px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    @media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+  #gameArea {
+    padding: 15px;
+  }
+  #track {
+    height: 60px;
+  }
+  #car {
+    height: 40px;
+    top: 8px;
+  }
+  #paragraph {
+    font-size: 16px;
+    padding: 10px;
+    min-height: 50px;
+  }
+  textarea {
+    height: 80px;
+    font-size: 14px;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+  #timer, #score {
+    font-size: 18px;
+  }
+  #leaderboard {
+    padding: 8px;
+  }
+  table td {
+    font-size: 14px;
+  }
+}
+
+  </style>
+</head>
+<body>
+
+<h1>Bio Typing Race 🚗💨</h1>
+
+<div id="gameArea">
+  <div id="track">
+    <img id="car" src="images/final__3_-removebg-preview.png">
+  </div>
+
+  <div id="paragraph">Click Start to Begin</div>
+
+  <textarea id="typedText" placeholder="Type here..." disabled></textarea><br>
+
+  <button id="startButton">Start</button>
+
+  <div id="timer">⏳ Time: 60</div>
+  <div id="score">🏁 Score: 0</div>
+
+  <input type="text" id="playerName" placeholder="Your Name">
+</div>
+
+<div id="leaderboard">
+  <h3>🏆 Leaderboard</h3>
+  <table id="leaderboardTable"></table>
+</div>
+
+<p>Your friendly bioinformatics platform for learning biology, DNA, genes, mutations and more — powered by students, for students.</p>
+<p>Timer. </p>
+<p>Paragraph is  related to biology.</p>
+<p>Increse your typing speed.</p>
+<p>Learn with fun </p>
+<p>More Interactive in laptop and tab </p>
+<p>Made by bioinformatics and biotechnology students </p>
+<script type="module">
+  // Firebase Config
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+  import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD_VtMcL42y4GEJRNtL9nSpwNjL35zFh9A",
+    authDomain: "score-1307f.firebaseapp.com",
+    databaseURL: "https://score-1307f-default-rtdb.firebaseio.com",
+    projectId: "score-1307f",
+    storageBucket: "score-1307f.appspot.com",
+    messagingSenderId: "796173214179",
+    appId: "1:796173214179:web:42e6b31563932e869b00d6"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+
+  const car = document.getElementById("car");
+  const textArea = document.getElementById("typedText");
+  const paragraphDiv = document.getElementById("paragraph");
+  const timerDiv = document.getElementById("timer");
+  const scoreDiv = document.getElementById("score");
+  const nameInput = document.getElementById("playerName");
+  const leaderboardTable = document.getElementById("leaderboardTable");
+  const startButton = document.getElementById("startButton");
+
+  let paragraphs = [
+    "DNA replication is a fundamental biological process.",
+    "Mitochondria are the powerhouse of the cell.",
+    "Ribosomes synthesize proteins using RNA templates.",
+    "Transcription converts DNA to RNA.",
+    "Translation forms proteins from amino acids.",
+    "Photosynthesis occurs in chloroplasts.",
+    "Genetic code is universal across organisms.",
+    "Biotechnology uses living systems for innovations.",
+    "Nanobiotechnology merges nanotech with biology.",
+    "Proteins are made of amino acids."
+  ];
+
+  let currentPara = "";
+  let timer;
+  let timeLeft = 60;
+  let score = 0;
+
+  startButton.addEventListener("click", startGame);
+
+  function startGame() {
+    if (!nameInput.value) {
+      alert("Please enter your name!");
+      return;
+    }
+    timeLeft = 60;
+    score = 0;
+    timerDiv.innerText = "⏳ Time: " + timeLeft;
+    scoreDiv.innerText = "🏁 Score: " + score;
+    textArea.value = "";
+    textArea.disabled = false;
+    textArea.focus();
+    moveCar(0);
+    pickParagraph();
+    clearInterval(timer);
+    timer = setInterval(updateTimer, 1000);
+  }
+
+  function pickParagraph() {
+    currentPara = paragraphs[Math.floor(Math.random() * paragraphs.length)];
+    paragraphDiv.innerText = currentPara;
+  }
+
+  textArea.addEventListener("input", () => {
+    if (textArea.value.trim() === currentPara) {
+      score += 10;
+      moveCar(score);
+      scoreDiv.innerText = "🏁 Score: " + score;
+      textArea.value = "";
+      pickParagraph();
+    }
+  });
+
+  function moveCar(scoreValue) {
+    let trackWidth = document.getElementById("track").clientWidth;
+    let maxLeft = trackWidth - car.clientWidth;
+    let newLeft = (scoreValue / 100) * maxLeft;
+    car.style.left = newLeft + "px";
+  }
+
+  function updateTimer() {
+    timeLeft--;
+    timerDiv.innerText = "⏳ Time: " + timeLeft;
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      textArea.disabled = true;
+      endGame();
+    }
+  }
+
+  function endGame() {
+    alert("Game Over! Your Score: " + score);
+    const scoresRef = ref(database, "typing_scores");
+    push(scoresRef, { name: nameInput.value, score: score });
+    loadLeaderboard();
+  }
+
+  function loadLeaderboard() {
+    leaderboardTable.innerHTML = "<tr><th>Name</th><th>Score</th></tr>";
+    const scoresRef = ref(database, "typing_scores");
+    onValue(scoresRef, (snapshot) => {
+      let data = snapshot.val();
+      let list = [];
+      for (let id in data) {
+        list.push(data[id]);
+      }
+      list.sort((a, b) => b.score - a.score);
+      list.slice(0, 5).forEach(record => {
+        let tr = document.createElement("tr");
+        tr.innerHTML = `<td>${record.name}</td><td>${record.score}</td>`;
+        leaderboardTable.appendChild(tr);
+      });
+    });
+  }
+
+  loadLeaderboard();
+
+  // Disable Right Click
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// Disable F12, Ctrl+Shift+I, Ctrl+U, Ctrl+Shift+J
+document.onkeydown = function(e) {
+    if(e.keyCode == 123) { // F12
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+       return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+       return false;
+    }
+};
+
+// Disable Mouse Middle Click
+document.addEventListener("mousedown", function(e){
+  if(e.button == 1){
+    e.preventDefault();
+    return false;
+  }
+}, true);
+
+// Disable Dragging
+document.addEventListener('dragstart', event => event.preventDefault());
+</script>
+
+</body>
+</html>
